@@ -45,9 +45,8 @@ export default class Router {
         instance = new currentRouter.view(this._app);
       } else {
         instance = new currentRouter.view();
+        this._app.innerHTML = await instance.initialHtml();
       }
-
-      this._app.innerHTML = await instance.initialHtml();
     }
   };
 }
