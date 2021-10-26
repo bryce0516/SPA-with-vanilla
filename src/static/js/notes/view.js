@@ -11,6 +11,7 @@ export default class NoteView {
     this.root.innerHTML = `
             <div class="notes__sidebar">
                 <button class="notes__add" type="button">Add Note</button>
+                <button class="notes__edit" style="visibility: hidden;" type="button">Edit Note</button>
                 <div class="notes__list"></div>
             </div>
             <div class="notes__preview">
@@ -30,6 +31,16 @@ export default class NoteView {
 
     if (this.currentAllNotes.length !== 0) {
       this.updateNoteList(notes);
+    }
+
+    if (inpTitle !== null && inpBody !== null) {
+      [inpTitle, inpBody].forEach((inputField) => {
+        inputField.addEventListener("blur", () => {
+          const updatedTitle = inpTitle.value.trim();
+          const updatedBody = inpBody.value.trim();
+          this.onNoteEdit(updatedTitle, updatedBody);
+        });
+      });
     }
 
     // [inpTitle, inpBody].forEach((inputField) => {
@@ -109,20 +120,21 @@ export default class NoteView {
   }
 
   updateActiveNote(note) {
-    console.log("updateActiveNote", note);
     this.root.querySelector(".notes__title").value = note.title;
     this.root.querySelector(".notes__body").value = note.body;
-
+    this.root.querySelector(".notes__edit").style.visibility = "visible";
     this.root.querySelectorAll(".notes__list-item").forEach((element) => {
       element.classList.remove("notes__list-item--selected");
     });
-    //todo list
-    // this.root.querySelector()
+
+    this.root
+      .querySelector(`.notes__list-item[data-note-id="${note.id}"]`)
+      .classList.add("notes__list-item--selected");
   }
 
-  // updateNotePreviewVisibility(visible) {
-  //   this.root.querySelector(".notes__preview").style.visibility = visible
-  //     ? "visible"
-  //     : "hidden";
-  // }
+  updateNotePreviewVisibility(visible) {
+    this.root.querySelector(".notes__preview").style.visibility = visible
+      ? "visible"
+      : "hidden";
+  }
 }
