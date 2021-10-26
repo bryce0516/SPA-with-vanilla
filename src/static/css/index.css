@@ -97,6 +97,7 @@ a {
 
 .notes__small-updated {
   color: #aaaaaa;
+  font-size: 0.8em;
   font-style: italic;
   text-align: right;
 }

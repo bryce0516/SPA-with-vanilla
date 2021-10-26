@@ -1,7 +1,8 @@
 export default class NoteView {
-  constructor(root, handlers) {
+  constructor(root, handlers, notes) {
     const { onNoteSelect, onNoteAdd, onNoteEdit, onNoteDelete } = handlers;
     this.root = root;
+    this.currentAllNotes = notes;
     this.onNoteSelect = onNoteSelect;
     this.onNoteAdd = onNoteAdd;
     this.onNoteEdit = onNoteEdit;
@@ -19,12 +20,17 @@ export default class NoteView {
         `;
 
     const btnAddNote = this.root.querySelector(".notes__add");
-    const inpTitle = this.root.querySelector(".note.__title");
+    const inpTitle = this.root.querySelector(".notes__title");
     const inpBody = this.root.querySelector(".notes__body");
 
-    // btnAddNote.addEventListener("click", () => {
-    //   this.onNoteAdd();
-    // });
+    btnAddNote.addEventListener("click", () => {
+      this.onNoteAdd(inpTitle.value, inpBody.value);
+    });
+    console.log("constructor is working", notes);
+
+    if (this.currentAllNotes.length !== 0) {
+      this.updateNoteList(notes);
+    }
 
     // [inpTitle, inpBody].forEach((inputField) => {
     //   inputField.addEventListener("blur", () => {
@@ -46,69 +52,73 @@ export default class NoteView {
     //   onNoteDelete
     // );
   }
-  // _createListItemHTML(id, title, body, updated) {
-  //   const MAX_BODY_LENGTH = 60;
 
-  //   return `
-  //     <div class="notes__list-item" data-note-id="${id}">
-  //       <div class="notes__small-title">${title}</div>
-  //       <div class="notes__small-body">
-  //       ${body.substring(0, MAX_BODY_LENGTH)}
-  //       ${body.length > MAX_BODY_LENGTH ? "..." : ""}
-  //       </div>
-  //       <div class="notes__small-updated">
-  //         ${updated.toLocaleString("en-US", {
-  //           dateStyle: "full",
-  //           timeStyle: "short",
-  //         })}
-  //       </div>
-  //     </div>
-  //   `;
-  // }
+  _createListItemHTML(id, title, body, updated) {
+    const MAX_BODY_LENGTH = 60;
 
-  // updateNoteList(notes) {
-  //   const notesListContainer = this.root.querySelector(".notes__list");
+    return `
+      <div class="notes__list-item" data-note-id="${id}">
+        <div class="notes__small-title">${title}</div>
+        <div class="notes__small-body">
+        ${body.substring(0, MAX_BODY_LENGTH)}
+        ${body.length > MAX_BODY_LENGTH ? "..." : ""}
+        </div>
+        <div class="notes__small-updated">
+          ${updated.toLocaleString("en-US", {
+            dateStyle: "full",
+            timeStyle: "short",
+          })}
+        </div>
+      </div>
+    `;
+  }
 
-  //   notesListContainer.innerHTML = "";
-  //   for (const note of notes) {
-  //     const html = this._createListItemHTML(
-  //       note.id,
-  //       note.title,
-  //       note.body,
-  //       new Date(note.updated)
-  //     );
+  updateNoteList(notes) {
+    console.log("updateNoteList is working", notes);
+    const notesListContainer = this.root.querySelector(".notes__list");
 
-  //     notesListContainer.insertAdjacentHTML("beforeend", html);
-  //   }
-  //   notesListContainer
-  //     .querySelectorAll(".notes__list-item")
-  //     .forEach((element) => {
-  //       element.addEventListener("click", () => {
-  //         this.onNoteSelect(element.dataset.noteId);
-  //       });
+    notesListContainer.innerHTML = "";
+    for (const note of notes) {
+      const html = this._createListItemHTML(
+        note.id,
+        note.title,
+        note.body,
+        new Date(note.updated)
+      );
 
-  //       element.addEventListener("dblclick", () => {
-  //         const deleteElement = confirm(
-  //           "Are you sure you want to delete this note?"
-  //         );
+      notesListContainer.insertAdjacentHTML("beforeend", html);
+    }
 
-  //         if (deleteElement) {
-  //           this.onNoteDelete(element.dataset.noteId);
-  //         }
-  //       });
-  //     });
-  // }
+    notesListContainer
+      .querySelectorAll(".notes__list-item")
+      .forEach((element) => {
+        element.addEventListener("click", () => {
+          this.onNoteSelect(element.dataset.noteId);
+        });
 
-  // updateActiveNote(note) {
-  //   this.root.querySelector(".notes__title").value = note.title;
-  //   this.root.querySelector(".notes__body").value = note.body;
+        element.addEventListener("dblclick", () => {
+          const deleteElement = confirm(
+            "Are you sure you want to delete this note?"
+          );
 
-  //   this.root.querySelectorAll(".notes__list-item").forEach((element) => {
-  //     element.classList.remove("notes__list-item--selected");
-  //   });
-  //   //todo list
-  //   // this.root.querySelector()
-  // }
+          if (deleteElement) {
+            this.onNoteDelete(element.dataset.noteId);
+          }
+        });
+      });
+  }
+
+  updateActiveNote(note) {
+    console.log("updateActiveNote", note);
+    this.root.querySelector(".notes__title").value = note.title;
+    this.root.querySelector(".notes__body").value = note.body;
+
+    this.root.querySelectorAll(".notes__list-item").forEach((element) => {
+      element.classList.remove("notes__list-item--selected");
+    });
+    //todo list
+    // this.root.querySelector()
+  }
 
   // updateNotePreviewVisibility(visible) {
   //   this.root.querySelector(".notes__preview").style.visibility = visible

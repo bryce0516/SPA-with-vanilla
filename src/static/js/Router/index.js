@@ -1,3 +1,5 @@
+import NoteApi from "../notes/api";
+
 export default class Router {
   constructor(routerList, _app) {
     this.routerList = routerList;
@@ -42,7 +44,8 @@ export default class Router {
     if (currentRouter) {
       let instance;
       if (currentRouter.path === "/notes") {
-        instance = new currentRouter.view(this._app);
+        const notes = NoteApi.getAllNotes();
+        instance = new currentRouter.view(this._app, notes);
       } else {
         instance = new currentRouter.view();
         this._app.innerHTML = await instance.initialHtml();
