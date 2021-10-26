@@ -8,10 +8,10 @@ export default class NoteView {
     this.onNoteEdit = onNoteEdit;
     this.onNoteDelete = onNoteDelete;
 
+    //  <button class="notes__edit" style="visibility: hidden;" type="button">Edit Note</button>
     this.root.innerHTML = `
             <div class="notes__sidebar">
                 <button class="notes__add" type="button">Add Note</button>
-                <button class="notes__edit" style="visibility: hidden;" type="button">Edit Note</button>
                 <div class="notes__list"></div>
             </div>
             <div class="notes__preview">
@@ -122,7 +122,10 @@ export default class NoteView {
   updateActiveNote(note) {
     this.root.querySelector(".notes__title").value = note.title;
     this.root.querySelector(".notes__body").value = note.body;
-    this.root.querySelector(".notes__edit").style.visibility = "visible";
+    const check = this.root
+      .querySelector(".notes__add")
+      .classList.replace(".notes__edit");
+    console.log("check", check);
     this.root.querySelectorAll(".notes__list-item").forEach((element) => {
       element.classList.remove("notes__list-item--selected");
     });
