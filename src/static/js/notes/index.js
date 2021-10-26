@@ -16,8 +16,8 @@ export default class Notes extends initialTemplate {
       onNoteAdd: () => {
         console.log("onNoteAdd");
       },
-      onNoteEdit: () => {
-        console.log("onNoteEdit");
+      onNoteEdit: (title, body) => {
+        console.log("onNoteEdit", title, body);
       },
       onNoteDelete: () => {
         console.log("onNoteDelete");
