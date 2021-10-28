@@ -49,4 +49,17 @@ export default class NoteApi {
     const result = notes.filter((element) => element.id !== Number(id));
     localStorage.setItem("notes", JSON.stringify(result));
   }
+
+  static async post() {
+    try {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/posts"
+      );
+      if (response.status === 200) {
+        return response.json();
+      }
+    } catch (error) {
+      console.log("error has occured " + error);
+    }
+  }
 }

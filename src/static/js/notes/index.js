@@ -35,6 +35,10 @@ export default class Notes extends initialTemplate {
         this._refresh();
         console.log("onNoteDelete");
       },
+      fetchingPost: async () => {
+        const result = await NoteApi.post();
+        return result;
+      },
     };
   }
 

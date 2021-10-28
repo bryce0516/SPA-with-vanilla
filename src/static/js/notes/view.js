@@ -1,12 +1,14 @@
 export default class NoteView {
   constructor(root, handlers, notes) {
-    const { onNoteSelect, onNoteAdd, onNoteEdit, onNoteDelete } = handlers;
+    const { onNoteSelect, onNoteAdd, onNoteEdit, onNoteDelete, fetchingPost } =
+      handlers;
     this.root = root;
     this.currentAllNotes = notes;
     this.onNoteSelect = onNoteSelect;
     this.onNoteAdd = onNoteAdd;
     this.onNoteEdit = onNoteEdit;
     this.onNoteDelete = onNoteDelete;
+    this.fetchingPost = fetchingPost;
     //  <button class="notes__edit" style="visibility: hidden;" type="button">Edit Note</button>
     this.root.innerHTML = `
             <div class="notes__sidebar">
@@ -53,30 +55,40 @@ export default class NoteView {
         ${body.length > MAX_BODY_LENGTH ? "..." : ""}
         </div>
         <div class="notes__small-updated">
-          ${updated.toLocaleString("en-US", {
-            dateStyle: "full",
-            timeStyle: "short",
-          })}
         </div>
       </div>
     `;
   }
 
-  updateNoteList(notes) {
+  //   ${updated.toLocaleString("en-US", {
+  //   dateStyle: "full",
+  //   timeStyle: "short",
+  // })}
+
+  async updateNoteList(notes) {
+    const posts = await this.fetchingPost();
+
+    console.log("this is fetchingPost", posts);
     console.log("updateNoteList is working", notes);
     const notesListContainer = this.root.querySelector(".notes__list");
-
     notesListContainer.innerHTML = "";
-    for (const note of notes) {
-      const html = this._createListItemHTML(
-        note.id,
-        note.title,
-        note.body,
-        new Date(note.updated)
-      );
+    for (const post of posts) {
+      const html = this._createListItemHTML(post.id, post.userId, post.body);
 
       notesListContainer.insertAdjacentHTML("beforeend", html);
     }
+
+    // notesListContainer.innerHTML = "";
+    // for (const note of notes) {
+    //   const html = this._createListItemHTML(
+    //     note.id,
+    //     note.title,
+    //     note.body,
+    //     new Date(note.updated)
+    //   );
+
+    //   notesListContainer.insertAdjacentHTML("beforeend", html);
+    // }
 
     notesListContainer
       .querySelectorAll(".notes__list-item")
