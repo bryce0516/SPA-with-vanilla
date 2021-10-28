@@ -7,11 +7,10 @@ export default class NoteView {
     this.onNoteAdd = onNoteAdd;
     this.onNoteEdit = onNoteEdit;
     this.onNoteDelete = onNoteDelete;
-
     //  <button class="notes__edit" style="visibility: hidden;" type="button">Edit Note</button>
     this.root.innerHTML = `
             <div class="notes__sidebar">
-                <button class="notes__add" type="button">Add Note</button>
+                <button class="notes__add" type="button" id="changeButton">Add Note</button>
                 <div class="notes__list"></div>
             </div>
             <div class="notes__preview">
@@ -27,7 +26,6 @@ export default class NoteView {
     btnAddNote.addEventListener("click", () => {
       this.onNoteAdd(inpTitle.value, inpBody.value);
     });
-    console.log("constructor is working", notes);
 
     if (this.currentAllNotes.length !== 0) {
       this.updateNoteList(notes);
@@ -42,26 +40,6 @@ export default class NoteView {
         });
       });
     }
-
-    // [inpTitle, inpBody].forEach((inputField) => {
-    //   inputField.addEventListener("blur", () => {
-    //     const updatedTitle = inpTitle.value.trim();
-    //     const updatedBody = inpBody.value.trim();
-
-    //     this.onNoteEdit(updatedTitle, updatedBody);
-    //   });
-    // });
-
-    // this.updateNotePreviewVisibility(false);
-
-    // console.log("this is root", root);
-    // console.log(
-    //   "this is handlers",
-    //   onNoteSelect,
-    //   onNoteAdd,
-    //   onNoteEdit,
-    //   onNoteDelete
-    // );
   }
 
   _createListItemHTML(id, title, body, updated) {
@@ -106,7 +84,6 @@ export default class NoteView {
         element.addEventListener("click", () => {
           this.onNoteSelect(element.dataset.noteId);
         });
-
         element.addEventListener("dblclick", () => {
           const deleteElement = confirm(
             "Are you sure you want to delete this note?"
@@ -122,10 +99,11 @@ export default class NoteView {
   updateActiveNote(note) {
     this.root.querySelector(".notes__title").value = note.title;
     this.root.querySelector(".notes__body").value = note.body;
-    const check = this.root
-      .querySelector(".notes__add")
-      .classList.replace(".notes__edit");
-    console.log("check", check);
+
+    const _changeButton = document.getElementById("changeButton");
+    _changeButton.classList.replace("notes__add", "notes__edit");
+    _changeButton.innerText = "Edit button";
+
     this.root.querySelectorAll(".notes__list-item").forEach((element) => {
       element.classList.remove("notes__list-item--selected");
     });

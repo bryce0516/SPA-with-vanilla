@@ -28,4 +28,25 @@ export default class NoteApi {
     }
     localStorage.setItem("notes", JSON.stringify(notes));
   }
+
+  static editNote(id, title, body) {
+    const notes = NoteApi.getAllNotes();
+    const result = notes.map((element) =>
+      element.id === Number(id)
+        ? (element = {
+            id,
+            title,
+            body,
+            updated: new Date().toISOString(),
+          })
+        : element
+    );
+    localStorage.setItem("notes", JSON.stringify(result));
+  }
+
+  static deleteNote(id) {
+    const notes = NoteApi.getAllNotes();
+    const result = notes.filter((element) => element.id !== Number(id));
+    localStorage.setItem("notes", JSON.stringify(result));
+  }
 }

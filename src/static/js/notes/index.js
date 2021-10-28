@@ -25,9 +25,14 @@ export default class Notes extends initialTemplate {
         this._refresh();
       },
       onNoteEdit: (title, body) => {
+        const id = this.activeNote.id;
+        NoteApi.editNote(id, title, body);
         console.log("onNoteEdit", title, body);
+        this._refresh();
       },
-      onNoteDelete: () => {
+      onNoteDelete: (id) => {
+        NoteApi.deleteNote(id);
+        this._refresh();
         console.log("onNoteDelete");
       },
     };
